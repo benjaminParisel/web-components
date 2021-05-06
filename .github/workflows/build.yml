@@ -32,9 +32,6 @@ jobs:
         run: cd components && npm run test:ci
 
       - name: Package
-        run: npm run pack
-
-      - name: Package
         run: cd components && npm run pack
 
       - name: Archive artefact
