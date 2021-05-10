@@ -33,7 +33,7 @@ jobs:
           --releaseType=${{github.event.inputs.releaseType}}
 
       - name: Publish on NPM
-        if: ${{ success() && github.event.inputs.npmPublish === 'true'}}
+        if: ${{ success() && github.event.inputs.npmPublish == 'true'}}
         run: |
           echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_REGISTRY_API_TOKEN }} >> $HOME/.npmrc
           ./components/infrastructure/publish.sh --component=${github.event.inputs.component}
