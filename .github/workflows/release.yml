@@ -2,7 +2,7 @@ name: Release web component
 
 on:
   workflow_dispatch:
-    input:
+    inputs:
       component:
         description: Component to release. Exemple =>  query-selector
         required: true
@@ -18,7 +18,6 @@ on:
         description: true to push on npm repository
         required: true
         default: true
-
 jobs:
   build:
     runs-on: ubuntu-20.04
