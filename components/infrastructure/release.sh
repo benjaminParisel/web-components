@@ -14,11 +14,12 @@ usage() {
   echo -e "  --component=component      component to release"
   echo ""
   echo -e "OPTIONS"
+  echo -e "  --git-push               Push commit and tag on github (default: false)"
   echo -e "  --help                   display this help"
   echo ""
   exit 1;
 }
-
+echo $(pwd)
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 echo $SCRIPT_DIR
 BASE_DIR=$SCRIPT_DIR/..
@@ -31,6 +32,10 @@ for i in "$@"; do
         ;;
         --component=*)
         COMPONENT="${i#*=}"
+        shift
+        ;;
+        --git-push)
+        GIT_PUSH=true
         shift
         ;;
          --help)
@@ -50,6 +55,7 @@ if [ -z "$COMPONENT" ]; then
 fi
 
 COMPONENT_PATH=$(find $BASE_DIR -name $COMPONENT)
+echo $COMPONENT_PATH
 cd "$COMPONENT_PATH" || exit
 
 ## Release component and get new version
@@ -60,6 +66,10 @@ SEMVER_VERSION=${SEMVER_VERSION:1}
 git commit -a -m "$COMPONENT: release packages v$SEMVER_VERSION"
 git tag "$COMPONENT@$SEMVER_VERSION" -m "$COMPONENT@$SEMVER_VERSION: release packages v$SEMVER_VERSION"
 
-git push origin "$COMPONENT@$SEMVER_VERSION"
+## Push commit and tag
+if [ "$GIT_PUSH" = true ]
+then
+  git push origin "$COMPONENT@$SEMVER_VERSION"
+fi
 
 echo "Release $COMPONENT@$SEMVER_VERSION success !";
