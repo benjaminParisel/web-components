@@ -10,10 +10,6 @@ on:
         description: Choose release type (semver following) [patch, minor, major, prepatch, preminor, premajor, prerelease]
         required: true
         default: minor
-      githubPush:
-        description: true to push commit and tag on github repository
-        required: true
-        default: true
       npmPublish:
         description: true to push on npm repository
         required: true
@@ -34,8 +30,7 @@ jobs:
         run: |
           ./components/infrastructure/release.sh \
           --component=${{github.event.inputs.component}} \
-          --releaseType=${{github.event.inputs.releaseType}} \
-          ${{github.event.inputs.githubPush}}
+          --releaseType=${{github.event.inputs.releaseType}}
 
       - name: Publish on NPM
         if: ${{ success() && github.event.inputs.npmPublish === 'true'}}

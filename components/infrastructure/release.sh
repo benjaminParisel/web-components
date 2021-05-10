@@ -14,7 +14,6 @@ usage() {
   echo -e "  --component=component      component to release"
   echo ""
   echo -e "OPTIONS"
-  echo -e "  --git-push               Push commit and tag on github (default: false)"
   echo -e "  --help                   display this help"
   echo ""
   exit 1;
@@ -31,10 +30,6 @@ for i in "$@"; do
         ;;
         --component=*)
         COMPONENT="${i#*=}"
-        shift
-        ;;
-        --git-push)
-        GIT_PUSH=true
         shift
         ;;
          --help)
@@ -64,10 +59,6 @@ SEMVER_VERSION=${SEMVER_VERSION:1}
 git commit -a -m "$COMPONENT: release packages v$SEMVER_VERSION"
 git tag "$COMPONENT@$SEMVER_VERSION" -m "$COMPONENT@$SEMVER_VERSION: release packages v$SEMVER_VERSION"
 
-## Push commit and tag
-if [ "$GIT_PUSH" = true ]
-then
-  git push origin "$COMPONENT@$SEMVER_VERSION"
-fi
+git push origin "$COMPONENT@$SEMVER_VERSION"
 
 echo "Release $COMPONENT@$SEMVER_VERSION success !";
