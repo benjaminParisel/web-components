@@ -1,0 +1,53 @@
+name: Release web component
+
+on:
+  workflow_dispatch:
+    input:
+      component:
+        description: Component to release. Exemple =>  query-selector
+        required: true
+      releaseType:
+        description: Choose release type (semver following) [patch, minor, major, prepatch, preminor, premajor, prerelease]
+        required: true
+        default: minor
+      githubPush:
+        description: true to push commit and tag on github repository
+        required: true
+        default: true
+      npmPublish:
+        description: true to push on npm repository
+        required: true
+        default: true
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install npm modules
+        run: |
+          ./components/infrastructure/release.sh \
+          --component=${{github.event.inputs.component}} \
+          --releaseType=${{github.event.inputs.releaseType}} \
+          ${{github.event.inputs.githubPush}}
+
+      - name: Publish on NPM
+        if: ${{ success() && github.event.inputs.npmPublish === 'true'}}
+        run: |
+          echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_REGISTRY_API_TOKEN }} >> $HOME/.npmrc
+          ./components/infrastructure/publish.sh --component=${github.event.inputs.component}
+
+      - name: Send message to Slack channel
+        uses: act10ns/slack@v1
+        if: ${{ failure() && (github.ref == 'refs/heads/master') }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+        with:
+          status: ${{ job.status }}

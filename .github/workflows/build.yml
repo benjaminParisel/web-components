@@ -6,12 +6,14 @@ on:
       - master
     paths:
       - 'components/*'
+      - 'legacy-elements/*'
       - '.github/workflows/build.yml'
   pull_request:
     branches:
       - master
     paths:
       - 'components/*'
+      - 'legacy-elements/*'
       - '.github/workflows/build.yml'
 jobs:
   build:
@@ -37,7 +39,7 @@ jobs:
       - name: Archive artefact
         uses: actions/upload-artifact@v2
         with:
-          name: all-components
+          name: all-components-in-one-zip
           path: |
             components/packages/**/lib/**,
             components/packages/**/*.tgz
@@ -46,6 +48,6 @@ jobs:
         uses: act10ns/slack@v1
         if: ${{ failure() && (github.ref == 'refs/heads/master') }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
         with:
           status: ${{ job.status }}
