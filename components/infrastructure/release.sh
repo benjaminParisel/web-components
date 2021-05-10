@@ -19,10 +19,10 @@ usage() {
   echo ""
   exit 1;
 }
-echo $(pwd)
+
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-echo $SCRIPT_DIR
 BASE_DIR=$SCRIPT_DIR/..
+COMPONENT_FOLDER=components
 
 for i in "$@"; do
     case $i in
@@ -54,8 +54,7 @@ if [ -z "$COMPONENT" ]; then
   usage;
 fi
 
-COMPONENT_PATH=$(find $BASE_DIR -name $COMPONENT)
-echo $COMPONENT_PATH
+COMPONENT_PATH="$(find $BASE_DIR -name "$COMPONENT")"
 cd "$COMPONENT_PATH" || exit
 
 ## Release component and get new version
