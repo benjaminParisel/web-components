@@ -37,13 +37,14 @@ jobs:
         run: |
           ./components/infrastructure/release.sh \
           --component=${{github.event.inputs.component}} \
-          --releaseType=${{github.event.inputs.releaseType}}
+          --releaseType=${{github.event.inputs.releaseType}} \
+          --git-push
 
       - name: Publish on NPM
         if: ${{ success() && github.event.inputs.npmPublish == 'true'}}
         run: |
           echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_REGISTRY_API_TOKEN }} >> $HOME/.npmrc
-          ./components/infrastructure/publish.sh --component=${{github.event.inputs.component}} --git-push
+          ./components/infrastructure/publish.sh --component=${{github.event.inputs.component}}
 
       - name: Send message to Slack channel
         uses: act10ns/slack@v1
