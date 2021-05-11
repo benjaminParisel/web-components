@@ -15,7 +15,7 @@ on:
         required: true
         default: true
 jobs:
-  build:
+  release:
     runs-on: ubuntu-20.04
 
     steps:
@@ -43,8 +43,9 @@ jobs:
       - name: Publish on NPM
         if: ${{ success() && github.event.inputs.npmPublish == 'true'}}
         run: |
-          echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_REGISTRY_API_TOKEN }} >> $HOME/.npmrc
           ./components/infrastructure/publish.sh --component=${{github.event.inputs.component}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Send message to Slack channel
         uses: act10ns/slack@v1
