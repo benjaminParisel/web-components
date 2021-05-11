@@ -42,6 +42,7 @@ cd "$COMPONENT_PATH" || exit
 
 ## Push on npm repository
 # Check if user is logged on npm registry
+echo "whoami"
 NPM_USER=$(npm whoami)
 echo $NPM_USER
 if [ "$NPM_USER" ]; then
