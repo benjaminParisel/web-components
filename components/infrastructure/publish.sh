@@ -47,6 +47,6 @@ NPM_USER=$(npm whoami)
 echo $NPM_USER
 if [ "$NPM_USER" ]; then
     npm run bundle
-#    npm publish --access public
+    #npm publish --ignore-scripts --access public
     echo "Publish ${COMPONENT} on npm registry as  ${NPM_USER}"
 fi

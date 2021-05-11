@@ -43,6 +43,7 @@ jobs:
       - name: Publish on NPM
         if: ${{ success() && github.event.inputs.npmPublish == 'true'}}
         run: |
+          npm config set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
           ./components/infrastructure/publish.sh --component=${{github.event.inputs.component}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
